@@ -1,0 +1,119 @@
+var questionCounter = 1;
+var scoreKeeper = 0;
+var correctAnswerCounter = 0;
+var correctAnswerPoint = 1;
+var incorrectAnswerCounter = 0;
+var incorrectAnswerPoint = 2;
+var answerButton1Var=0;
+var answerButton2Var=0;
+var answerButton3Var=0;
+var answerButton4Var=0;
+var userAnswer=2;
+var loopTimeout=0;
+var k=0;
+var questions = ["Which protocol is used to automatically provide IP addresses to network computers?", "Which protocol is used to resolve domain names to IP addresses?", "Which protocol is used to resolve IP to MAC addresses?", "Which protocol is used to provide secure connections across the Internet?", "Which of the following steps can be used to protect your system against viruses, worms, and other malicious software?", "The best way to guard against ESD is to use a(n) _____________ together with a ground mat.", "A warm boot involves using the ______________ to reboot.", "The POST, or ______________, is a series of tests performed by the startup BIOS to determine if it can communicate correctly with essential hardware components required for a successful boot.", "Dust is not good for a PC because it insulates PC parts like a blanket, which can cause them to overheat. Which one of the following would be the best way to rid your computer of dust?", "If your computer will not boot properly and you hear beeps, what should you do?", "Which is the least secure encryption type?", "Which feature allows a mobile device such as cellphone to share an Internet connection with other wireless devices?", "Which wireless standard provides the best data rate for wireless routers?", "Which type of IP address never changes?", "What is the maximum data rate for Cat5e?"];
+var choices = ["DHCP", "DNS", "ARP", "IGMP", "TCP", "DNS", "DHCP", "ARP", "DNS", "DHCP", "ARP", "WEP", "ARP", "HTTPS", "NTP", "POP3", "Keep Windows updates current", "Minimize the time spent using the Web", "Reload application software frequently", "Use multiple ﬁrewalls at the same time", "Static-free table", "Antistatic cloth", "Ground bracelet", "Static gloves", "Operating system", "Power button on the back of the tower", "Power plug", "Warm button", "Power-on Service Test", "Power-On Self-Test", "Power-On Self-Trial", "Positive Operation Self-Test", "Antistatic bag", "Antistatic vacuum", "Static-free cloth", "Small feather duster", "Try a different ethernet cable", "Consult the motherboard manual or website", "Get ear plugs", "Check the cable between the monitor and tower", "WPA", "WEP", "AES", "TKIP", "Tethering", "ISDN", "RJ-45 dongle", "GPS", "802.11ac", "801.11g", "802.11n", "802.11b", "APIPA", "Static", "Dynamic", "Public", "10 Mbps", "100 Mbps", "1 Gbps", "10 Gbps"];
+var answerKey = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0];
+onEvent("StartButton", "click", function( ) {
+for (var i = 0; i < 10; i++) {
+k=i;
+var questionPicker = randomNumber(1, 15);
+setText("QuestionNumber", "Question "+questionCounter);
+setText("questionBox", questions[questionPicker]);
+setText("choiceOneTextBox", choices[questionPicker*4]);
+setText("choiceTwoTextBox", choices[questionPicker*4+1]);
+setText("choiceThreeTextBox", choices[(questionPicker*4+2)]);
+setText("choiceFourTextBox", choices[(questionPicker*4+3)]);
+answerButton1Var = answerKey[questionPicker*4];
+answerButton2Var = answerKey[(questionPicker*4+1)];
+answerButton3Var = answerKey[(questionPicker*4+2)];
+answerButton4Var = answerKey[(questionPicker*4+3)];
+delay(k);
+}
+setScreen("endScreen");
+});
+onEvent("answerButton1", "click", function( ) {
+  userAnswer = answerButton1Var;
+  clearTimeout(loopTimeout);
+  loopTimeout = 0;
+});
+onEvent("answerButton2", "click", function( ) {
+  userAnswer = answerButton2Var;
+  clearTimeout(loopTimeout);
+  loopTimeout = 0;
+});
+onEvent("answerButton3", "click", function( ) {
+  userAnswer = answerButton3Var;
+  clearTimeout(loopTimeout);
+  loopTimeout = 0;
+});
+onEvent("answerButton4", "click", function( ) {
+  userAnswer = answerButton4Var;
+  clearTimeout(loopTimeout);
+  loopTimeout = 0;
+});
+onEvent("StartButton", "click", function( ) {
+	setScreen("QuestionScreen");
+});
+onEvent("nextButton", "click", function( ) {
+  clearTimeout(loopTimeout);
+  hideElement("correctIndicator");
+  hideElement("incorrectIndicator");
+});
+onEvent("HelpButton", "click", function( ) {
+  setScreen("HelpScreen");
+});
+onEvent("HelpScreenHomeButton", "click", function( ) {
+  setScreen("WelcomeScreen");
+});
+onEvent("QuestionScreenExitButton", "click", function( ) {
+  scoreKeeper = 0;
+  questionCounter = 1;
+  hideElement("correctIndicator");
+  hideElement("incorrectIndicator");
+  setText("QuestionNumber", "Question "+questionCounter);
+  setText("scoreKeeperDisplay", "Score: "+scoreKeeper);
+  setScreen("WelcomeScreen");
+});
+onEvent("doneButton", "click", function( ) {
+  setScreen("WelcomeScreen");
+});
+function goToendScreen() {
+  setScreen("endScreen");
+}
+function delay(k) {
+  loopTimeout=setTimeout(function() {
+    loopTimeout = 10000;
+    if (userAnswer==1) {
+        showElement("correctIndicator");
+        correctAnswerCounter = correctAnswerCounter+1;
+        scoreKeeper = scoreKeeper+correctAnswerPoint;
+      } else {
+        showElement("incorrectIndicator");
+        incorrectAnswerCounter = incorrectAnswerCounter+1;
+        scoreKeeper = scoreKeeper-incorrectAnswerPoint;
+      }
+    setText("scoreKeeperDisplay", "Score: "+scoreKeeper);
+    showElement("nextButton");
+    userAnswer = 2;
+    questionCounter = questionCounter+1;
+    var questionPicker = randomNumber(1, 15);
+setText("QuestionNumber", "Question "+questionCounter);
+setText("questionBox", questions[questionPicker]);
+setText("choiceOneTextBox", choices[questionPicker*4]);
+setText("choiceTwoTextBox", choices[questionPicker*4+1]);
+setText("choiceThreeTextBox", choices[(questionPicker*4+2)]);
+setText("choiceFourTextBox", choices[(questionPicker*4+3)]);
+answerButton1Var = answerKey[questionPicker*4];
+answerButton2Var = answerKey[(questionPicker*4+1)];
+answerButton3Var = answerKey[(questionPicker*4+2)];
+answerButton4Var = answerKey[(questionPicker*4+3)];
+    if (questionCounter==10) {
+      goToendScreen();
+      setText("finalScore", "Final Score: "+scoreKeeper);
+      setText("correctlyAnswered", "Correcly Answered: "+correctAnswerCounter);
+      setText("incorreclyAnswered", "Incorrectly Answered: "+incorrectAnswerCounter);
+      setText("percentageCorrect", "Percentage Correct: "+Math.round((correctAnswerCounter/9)*100).toFixed(0)+"%");
+    }
+  }, 10000*(k+1));
+}
